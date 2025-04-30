@@ -36,11 +36,11 @@ Notepad++ interacts with your plugin by calling these functions. You *must* expo
     * **Signature:** `FuncItem* getFuncsArray(int* nbFunc)`
     * **Default fasm2 Implementation:**
         * Receives one argument: a pointer to an integer. `nbFunc` is an *output* parameter.
-        * When a custom `getFuncsArray` proc is not defined, the code generated assume an array of `FuncItem` structures named `CommandItems`. Also, the `sizeof CommandItems` *must* resolve to the number of structures in the array.
+        * When a custom `getFuncsArray` proc is not defined, the code generated assume an array of `FuncItem` structures named `CommandItems`. Also, the `sizeof CommandItems` **must** resolve to the number of structures in the array.
             * Array `CommandItems` **must** be in writeable memory.
-            * A `FuncItem` entry with a `NULL` (`0`) value for `_pFunc` will be displayed as a separator in the plugin menu - ignoring the structure.
+            * A `FuncItem` entry with a `NULL` value for `_pFunc` will be displayed as a separator in the plugin menu - ignoring the structure.
             * Do not set the `_cmdID` field; Notepad++ assigns and manages these internally. Any value you set will be overwritten.
-            * The `_pFunc` field (when not `NULL`) must point to a function taking no arguments and returning `void`.
+            * The `_pFunc` field (when not `NULL`) must point to a function taking/returning no arguments.
 
 4.  **`beNotified`**
     * **Purpose:** The primary callback for receiving notifications from Notepad++ and the Scintilla editor component about various events (file changes, buffer activation, shutdown, UI events, etc.).
@@ -59,3 +59,11 @@ Notepad++ interacts with your plugin by calling these functions. You *must* expo
     * **Signature:** `BOOL isUnicode()`
     * **Default fasm2 Implementation:**
         * When a custom `isUnicode` proc is not defined, the default implementation correctly returns `TRUE`, as required by current Notepad++ versions. Overriding this is generally unnecessary.
+
+
+## Licensing
+
+This repository contains code under multiple licenses:
+
+* The Notepad++ plugin code (and conversions of such) is licensed under the **GNU General Public License v3.0 or later** (see `LICENSE.NPP` and file headers).
+* The general-purpose code is licensed under the **MIT License** (see `LICENSE`).
