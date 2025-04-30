@@ -13,13 +13,14 @@ include 'map.BufferID.inc'
 IDM_PLUGIN_TOGGLE	:= 0
 IDM_PLUGIN_ABOUT	:= 1
 
-{bss:8} g_priorBufferId dq ?
-{bss:1} g_isPerFileWrapEnabled db ?
+{data:1} g_isPerFileWrapEnabled db MF_CHECKED ; start enabled
 
 ;-------------------------------------------------------------------------------
 
 ; This data defines the plugin menu (needs to be writeable):
 BLOCK COFF.8.DATA
+	g_priorBufferId dq ?
+
 	label CommandItems:2 ; sizeof = FuncItem item count
 
 	; Populate our menu item entries:
@@ -91,6 +92,9 @@ END BLOCK
 		.iWrap	dd ?	; SC_WRAP_*
 	end virtual
 
+	test [g_isPerFileWrapEnabled], -1
+	jz .done
+
 	SendMessageW [g_hNPP], NPPM_GETCURRENTSCINTILLA, 0, & .hSci
 	test dword [.hSci], -1 ; index or error
 	js .done
@@ -106,9 +110,6 @@ END BLOCK
 	jz .done
 	mov [.iBuf], rax
 
-	test [g_isPerFileWrapEnabled], -1
-	jz .disabled
-
 	mov rcx, [g_priorBufferId]
 	jrcxz .skip_retro
 	cmp rcx, rax
@@ -120,15 +121,18 @@ END BLOCK
 	Map__Get rcx
 	jz .use_cached_state
 	Map__Set [.iBuf],,[.iWrap]	; cache current state
-	jmp .disabled
+	jmp .done
 
 .use_cached_state:
+	cmp [.iWrap], eax
+	jz .done
+
 	mov [.iWrap], eax		; use prior cached state
 	test eax, eax
 	setnz al
 	movzx r8d, al			; SC_WRAP_NONE | SC_WRAP_WORD
 	SendMessageW [.hSci], SCI_SETWRAPMODE, r8, 0
-.disabled:
+
 	mov r9d, MF_CHECKED
 	test [.iWrap], -1
 	cmovz r9d, [.iWrap] ; Any non- SC_WRAP_NONE mode is wrapping enabled.
