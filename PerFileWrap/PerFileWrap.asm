@@ -2,17 +2,12 @@
 ; Per-File Wrapping
 ;-------------------------------------------------------------------------------
 ; (call fasm2 -e 9 PerFileWrap.asm && link @PerFileWrap.response) && exit
-; (del PerFileWrap.response PerFileWrap.obj PerFileWrap.dll) && exit
+; (del *.response *.obj *.exp *.lib) && exit
 
 include '..\PluginInterface.g' ; ensure needed parts are defined
 include 'map.BufferID.inc'
 
 {const:2} PluginNameW du 'PerFileWrap',0
-
-; Define a command ID for the menu items (can be 0, 1, 2... for simple plugins):
-IDM_PLUGIN_TOGGLE	:= 0
-IDM_PLUGIN_ABOUT	:= 1
-
 {data:1} g_isPerFileWrapEnabled db MF_CHECKED ; start enabled
 
 ;-------------------------------------------------------------------------------
@@ -21,21 +16,23 @@ IDM_PLUGIN_ABOUT	:= 1
 BLOCK COFF.8.DATA
 	g_priorBufferId dq ?
 
-	label CommandItems:2 ; sizeof = FuncItem item count
+	label CommandItems:3 ; sizeof = FuncItem item count
 
 	; Populate our menu item entries:
 
-	PluginToggle FuncItem \
-		_itemName:	<'Enabled',0>,\		; menu text
-		_pFunc:		toggleEnable,\		; function to call
-		_cmdID:		IDM_PLUGIN_TOGGLE,\	; assign the ID
-		_init2Check:	TRUE,\			; start enabled
-		_pShKey:	NULL			; no shortcut key
+	PluginToggle	FuncItem \
+		_itemName:	<'Enabled',0>,\	; menu text
+		_pFunc:		toggleEnable,\	; function to call
+		_cmdID:		0,\		; plugin manager sets id
+		_init2Check:	TRUE,\		; start enabled
+		_pShKey:	NULL		; no shortcut key
 
-	PluginAbout FuncItem \
+	; Separator when _pFunc = NULL!
+			FuncItem
+
+	PluginAbout	FuncItem \ ; just the needed parts
 		_itemName:	<'About...',0>,\
-		_pFunc:		showAbout,\
-		_cmdID:		IDM_PLUGIN_ABOUT
+		_pFunc:		showAbout
 
 END BLOCK
 
