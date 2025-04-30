@@ -23,7 +23,7 @@ This plugin makes Notepad++ remember the Word Wrap setting **individually for ea
 
 Follow these steps carefully to install the plugin:
 
-1.  **Get the Correct Plugin File:** You need the compiled plugin file, which will likely be named `PerFileWrap.dll`.
+1.  **Get the Correct Plugin File:** You need the compiled plugin file, which will likely be named `PerFileWrap.dll`. Select the DLL through menu `Settings -> Import -> Plugin(s)`, or ...
 
 2.  **Find Notepad++ Installation Folder:** You need to locate where Notepad++ is installed on your computer. Common locations are:
     * 64-bit: `C:\Program Files\Notepad++`
