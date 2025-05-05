@@ -52,7 +52,7 @@ Notepad++ interacts with your plugin by calling these functions. You *must* expo
     * **Purpose:** A generic message handling function allowing Notepad++ to send specific messages directly to your plugin, often for queries that require a direct response or actions outside the notification system.
     * **Signature:** `LRESULT messageProc(UINT Message, WPARAM wParam, LPARAM lParam)`
     * **Default fasm2 Implementation:**
-        * When a custom `messageProc` proc is not defined, the default implementation typically returns `0`, indicating that the message was not handled. You need to implement this to respond to specific `NPPM_*` messages relevant to your plugin.
+        * When a custom `messageProc` proc is not defined, the default implementation returns `0`, indicating that the message was not handled. You need to implement this to respond to specific `NPPM_*` messages relevant to your plugin.
 
 6.  **`isUnicode`**
     * **Purpose:** Historically used to indicate if the plugin communicated using Unicode strings. Modern Notepad++ is inherently Unicode.
